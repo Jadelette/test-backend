@@ -1,0 +1,15 @@
+service: tasks-service 
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: eu-west-2
+
+functions:
+  tasks:
+    handler: tasks.handler
+    events:
+      - http:
+          path: tasks
+          method: get
+          cors: true
