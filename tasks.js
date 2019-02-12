@@ -51,40 +51,20 @@ app.delete('/tasks/:taskId', function(request, response){
 app.put('/tasks/:taskId', function(request, response){
   const taskToUpdate = request.params.taskId;
   const description = request.body.description;
+  const done = request.body.done;
+  const status = request.body.status;
   const dueDate = request.body.dueDate;
+  const userId = request.body.userId;
 
-  if(description&&dueDate) {
-  dbService.updateTaskDescription(taskToUpdate, description)
-  .then(dbService.updateTaskDue(taskToUpdate, dueDate))
+  dbService.updateTask(taskToUpdate, description, done, status, dueDate, userId)
   .then(function(results){
     response.json(results);
   })
   .catch(function(error){
     response.status(500);
     response.json(error);
-  });
-
-  } else if (description) {
-    dbService.updateTaskDescription(taskToUpdate, description)
-    .then(function(results){
-      response.json(results);
-    })
-    .catch(function(error){
-      response.status(500);
-      response.json(error);
-    });
-
-  } else if (dueDate) {
-    dbService.updateTaskDue(taskToUpdate, dueDate)
-    .then(function(results){
-      response.json(results);
-    })
-    .catch(function(error){
-      response.status(500);
-      response.json(error);
-    });
-  }
-  
+  });  
 })
+
 
 module.exports.handler = serverless(app);

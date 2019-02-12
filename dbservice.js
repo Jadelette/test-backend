@@ -52,17 +52,10 @@ function deleteTask(taskId) {
     return sendQuery(query, params);
 }
 
-function updateTaskDescription (taskId, description) {
-    const query = 'UPDATE tasks SET description = ? WHERE taskId = ? '
-    const params = [[description], [taskId]]
+function updateTask (taskId, description, done, status, dueDate, userId) {
 
-    return sendQuery(query, params);
-}
-
-
-function updateTaskDue (taskId, dueDate) {
-    const query = 'UPDATE tasks SET dueDate = ? WHERE taskId = ? '
-    const params = [[dueDate], [taskId]]
+    const query = 'UPDATE tasks SET description = ?, done = ?, status = ?, dueDate = ?, userId = ? WHERE taskId = ? '
+    const params = [[description], [done], [status], [dueDate], [userId], [taskId]]
 
     return sendQuery(query, params);
 }
@@ -73,6 +66,5 @@ module.exports = {
     getTasks,
     saveTask,
     deleteTask,
-    updateTaskDescription,
-    updateTaskDue
+    updateTask
 }
