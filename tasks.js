@@ -5,9 +5,10 @@ app.use(express.json());
 const dbService = require('./dbservice');
 
 app.get('/tasks', function (request, response) {
-  dbService.getTasks().then(function(tasks){
+  dbService.getTasks()
+  .then(function(results){
     //we got the tasks ok
-    response.json(tasks);
+    response.json(results);
   })
   .catch(function(error){
     //something went wrong
@@ -15,6 +16,7 @@ app.get('/tasks', function (request, response) {
     response.json(error);
   });
 })
+
 
 app.post('/tasks', function (request, response) {
   const description = request.body.description;
@@ -44,6 +46,7 @@ app.delete('/tasks/:taskId', function(request, response){
     response.json(error);
   });
 })
+
 
 app.put('/tasks/:taskId', function(request, response){
   const taskToUpdate = request.params.taskId;
@@ -83,9 +86,5 @@ app.put('/tasks/:taskId', function(request, response){
   }
   
 })
-
-
-
-
 
 module.exports.handler = serverless(app);

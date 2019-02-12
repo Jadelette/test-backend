@@ -9,14 +9,14 @@ function getDatabaseConnection() {
     });
 }
 
-function getTasks(){
+function sendQuery(query, params) {
     const connection = getDatabaseConnection();
-    return new Promise(function(resolve, reject){
-        connection.query("SELECT * FROM tasks", function(error,results, fields){ //select * from [view name] to run the query stored in the view
+    return new Promise(function(resolve, reject) {
+        connection.query(query, params, function(error, results, fields) {
             if (error) {
                 connection.destroy();
                 return reject(error);
-            }
+            } 
             else {
                 connection.end();
                 return resolve(results);
@@ -25,9 +25,13 @@ function getTasks(){
     });
 }
 
+
+function getTasks(){
+    const query = "SELECT * FROM tasks";
+    return sendQuery(query);
+}
+
 function saveTask(description, done, status, dueDate, userId) {
-    const connection = getDatabaseConnection();
-    return new Promise(function(resolve, reject) {
         const data  =  { 
         description: description, 	
         done: done,
@@ -35,70 +39,35 @@ function saveTask(description, done, status, dueDate, userId) {
         dueDate: dueDate,
         userId: userId
         };
-        connection.query('INSERT INTO tasks SET ?', data, function (error, results, fields) {
-            if (error) {
-                connection.destroy();
-                return reject(error);
-            }
-            else {
-                connection.end();
-                return resolve(results);
-            }
-        });
-    });
 
+        const query = "INSERT INTO tasks SET ?"
+        const params = data
+        return sendQuery(query, params);
 }
 
 function deleteTask(taskId) {
-    const connection = getDatabaseConnection();
-    return new Promise(function(resolve, reject){
-        
-        connection.query('DELETE FROM tasks WHERE taskId = ?', [taskId], function(error, results, fields) {
-            if (error) {
-                connection.destroy();
-                return reject(error);
-            }
-            else {
-                connection.end();
-                return resolve(results);
-            }
-        });
+    const query = 'DELETE FROM tasks WHERE taskId = ?'
+    const params = [taskId]
 
-    });
+    return sendQuery(query, params);
 }
 
 function updateTaskDescription (taskId, description) {
-    const connection = getDatabaseConnection();
-    return new Promise(function(resolve, reject) {
-        connection.query('UPDATE tasks SET description = ? WHERE taskId = ? ', [[description], [taskId]], function (error, results, fields) {
-            if (error) {
-                connection.destroy();
-                return reject(error);
-            }
-            else {
-                connection.end();
-                return resolve(results);
-            }
-        });
-    });
+    const query = 'UPDATE tasks SET description = ? WHERE taskId = ? '
+    const params = [[description], [taskId]]
+
+    return sendQuery(query, params);
 }
 
 
 function updateTaskDue (taskId, dueDate) {
-    const connection = getDatabaseConnection();
-    return new Promise(function(resolve, reject) {
-        connection.query('UPDATE tasks SET dueDate = ? WHERE taskId = ? ', [[dueDate], [taskId]], function (error, results, fields) {
-            if (error) {
-                connection.destroy();
-                return reject(error);
-            }
-            else {
-                connection.end();
-                return resolve(results);
-            }
-        });
-    });
+    const query = 'UPDATE tasks SET dueDate = ? WHERE taskId = ? '
+    const params = [[dueDate], [taskId]]
+
+    return sendQuery(query, params);
 }
+
+
 
 module.exports = {
     getTasks,
