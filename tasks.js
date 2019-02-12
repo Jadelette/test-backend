@@ -24,11 +24,9 @@ app.post('/tasks', function (request, response) {
   const userId = request.body.userId;
 
   dbService.saveTask(description, done, status, dueDate, userId).then(function(results){
-    //we got the tasks ok
     response.json(results);
   })
   .catch(function(error){
-    //something went wrong
     response.status(500);
     response.json(error);
   });
@@ -38,14 +36,16 @@ app.post('/tasks', function (request, response) {
 app.delete('/tasks/:taskId', function(request, response){
   const taskToBeDeleted = request.params.taskId;
 
-  let someResponse = dbService.deleteTask(taskToBeDeleted);
+  dbService.deleteTask(taskToBeDeleted).then(function(results){
+    response.json(results);
+  })
+  .catch(function(error){
+    response.status(500);
+    response.json(error);
+  });
+})
 
-  if (taskToBeDeleted > 3) {
-    response.status(404);
-    someResponse = 'task not found';
-  }
-  response.json(someResponse);
-});
+
 
 
 

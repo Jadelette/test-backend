@@ -50,10 +50,19 @@ function saveTask(description, done, status, dueDate, userId) {
 
 function deleteTask(taskId) {
     return new Promise(function(resolve, reject){
-        const data = taskId;
-        console.log(data);
+        
+        console.log(taskId);
 
-        return resolve("you requested to delete task with id: " + taskId) // not working
+        connection.query('DELETE FROM tasks WHERE taskID = ?', [taskId], function(error, results, fields) {
+            if (error) {
+                connection.destroy();
+                return reject(error);
+            }
+            else {
+                connection.end();
+                return resolve(results);
+            }
+        });
 
     });
 }
