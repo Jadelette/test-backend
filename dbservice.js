@@ -25,11 +25,16 @@ function getTasks(){
     });
 }
 
-/*function deleteTask(taskId){
+function saveTask(description, done, status, dueDate, userId) {
     const connection = getDatabaseConnection();
-    return new Promise(function(resolve, reject){
-        connection.query("DELETE FROM tasks WHERE taskId = ?", [taskId], function(error,results, fields){ 
-        
+    return new Promise(function(resolve, reject) {
+        const data  = { 
+        description: description, 	
+        done: done,
+        status: status,
+        dueDate: dueDate,
+        userId: user};
+        connection.query('INSERT INTO tasks SET ?', data, function (error, results, fields) {
             if (error) {
                 connection.destroy();
                 return reject(error);
@@ -40,11 +45,23 @@ function getTasks(){
             }
         });
     });
-}*/
+
+}
+
+function deleteTask(taskId) {
+    return new Promise(function(resolve, reject){
+        const data = taskId;
+        console.log(data);
+
+        return resolve("you requested to delete task with id: " + taskId) // not working
+
+    });
+}
 
 
 
 module.exports = {
     getTasks,
-
+    saveTask,
+    deleteTask
 }
