@@ -28,12 +28,13 @@ function getTasks(){
 function saveTask(description, done, status, dueDate, userId) {
     const connection = getDatabaseConnection();
     return new Promise(function(resolve, reject) {
-        const data  = { 
+        const data  =  { 
         description: description, 	
         done: done,
         status: status,
         dueDate: dueDate,
-        userId: user};
+        userId: userId
+        };
         connection.query('INSERT INTO tasks SET ?', data, function (error, results, fields) {
             if (error) {
                 connection.destroy();
@@ -49,10 +50,9 @@ function saveTask(description, done, status, dueDate, userId) {
 }
 
 function deleteTask(taskId) {
+    const connection = getDatabaseConnection();
     return new Promise(function(resolve, reject){
         
-        console.log(taskId);
-
         connection.query('DELETE FROM tasks WHERE taskId = ?', [taskId], function(error, results, fields) {
             if (error) {
                 connection.destroy();
@@ -67,10 +67,43 @@ function deleteTask(taskId) {
     });
 }
 
+function updateTaskDescription (taskId, description) {
+    const connection = getDatabaseConnection();
+    return new Promise(function(resolve, reject) {
+        connection.query('UPDATE tasks SET description = ? WHERE taskId = ? ', [[description], [taskId]], function (error, results, fields) {
+            if (error) {
+                connection.destroy();
+                return reject(error);
+            }
+            else {
+                connection.end();
+                return resolve(results);
+            }
+        });
+    });
+}
 
+
+function updateTaskDue (taskId, dueDate) {
+    const connection = getDatabaseConnection();
+    return new Promise(function(resolve, reject) {
+        connection.query('UPDATE tasks SET dueDate = ? WHERE taskId = ? ', [[dueDate], [taskId]], function (error, results, fields) {
+            if (error) {
+                connection.destroy();
+                return reject(error);
+            }
+            else {
+                connection.end();
+                return resolve(results);
+            }
+        });
+    });
+}
 
 module.exports = {
     getTasks,
     saveTask,
-    deleteTask
+    deleteTask,
+    updateTaskDescription,
+    updateTaskDue
 }

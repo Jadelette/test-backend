@@ -45,6 +45,45 @@ app.delete('/tasks/:taskId', function(request, response){
   });
 })
 
+app.put('/tasks/:taskId', function(request, response){
+  const taskToUpdate = request.params.taskId;
+  const description = request.body.description;
+  const dueDate = request.body.dueDate;
+
+  if(description&&dueDate) {
+  dbService.updateTaskDescription(taskToUpdate, description)
+  .then(dbService.updateTaskDue(taskToUpdate, dueDate))
+  .then(function(results){
+    response.json(results);
+  })
+  .catch(function(error){
+    response.status(500);
+    response.json(error);
+  });
+
+  } else if (description) {
+    dbService.updateTaskDescription(taskToUpdate, description)
+    .then(function(results){
+      response.json(results);
+    })
+    .catch(function(error){
+      response.status(500);
+      response.json(error);
+    });
+
+  } else if (dueDate) {
+    dbService.updateTaskDue(taskToUpdate, dueDate)
+    .then(function(results){
+      response.json(results);
+    })
+    .catch(function(error){
+      response.status(500);
+      response.json(error);
+    });
+  }
+  
+})
+
 
 
 
