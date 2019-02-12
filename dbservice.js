@@ -53,7 +53,7 @@ function deleteTask(taskId) {
         
         console.log(taskId);
 
-        connection.query('DELETE FROM tasks WHERE taskID = ?', [taskId], function(error, results, fields) {
+        connection.query('DELETE FROM tasks WHERE taskId = ?', [taskId], function(error, results, fields) {
             if (error) {
                 connection.destroy();
                 return reject(error);
